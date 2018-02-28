@@ -22,6 +22,7 @@ def scrape_html_for_data(url):
     
     return(main_imgs, series_title, chapter_name, chapter_number, folder_name)
 
+    
 def create_directory(folder_name):
     abs_path = os.path.abspath(sys.argv[0]) 
     current_dir = os.path.dirname(abs_path) # current script directory
@@ -29,8 +30,9 @@ def create_directory(folder_name):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
-    print("Folder created: ", folder_name)
+    print("Folder created: ", folder_name[:-1])
     return(output_dir, current_dir)
+    
     
 def download_images(main_imgs, series_title, chapter_name):    
     for img_tag in main_imgs[3:-2]:
@@ -47,25 +49,23 @@ def download_images(main_imgs, series_title, chapter_name):
         print("Downloading page: " + page_num + " out of " + main_imgs[-3]['src'].split('/')[-1], end="\r")
         print("Download complete.", end="\r")
 
-
-## method 1 - folder depth 1 ##
+        
 def create_zip_depth_one(output_dir, current_dir, folder_name):
     shutil.make_archive(output_dir, 'zip', current_dir, folder_name)
-    print(folder_name+".zip created. \nDone.")
+    print("Zip file created: "+folder_name[:-1]+".zip.")
 
-
-## method 2 folder depth 0 ##
-def zipdir(path, ziph):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file))
-
-main_imgs, series_title, chapter_name, chapter_number, folder_name = scrape_html_for_data(url)
-output_dir, current_dir = create_directory(folder_name)
-download_images(main_imgs, series_title, chapter_name)
-create_zip_depth_one(output_dir, current_dir, folder_name)
-
-# zipf = zipfile.ZipFile(folder_name[:-1]+'.zip', 'w', zipfile.ZIP_DEFLATED)
-# zipdir(folder_name, zipf)
-# zipf.close()
+if __name__ == "__main__":
+    try:
+        url = sys.argv[1]
+    except IndexError:
+        sys.exit("Please use a valid Meraki chapter url as an arg.")
+        
+    try:
+        main_imgs, series_title, chapter_name, chapter_number, folder_name = scrape_html_for_data(url)
+    except:
+        sys.exit("HTML was invalid. Contact asdfblarg with details.")
+        
+    output_dir, current_dir = create_directory(folder_name)
+    download_images(main_imgs, series_title, chapter_name)
+    create_zip_depth_one(output_dir, current_dir, folder_name)
+    print(Done)
