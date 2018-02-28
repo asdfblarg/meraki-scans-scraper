@@ -35,13 +35,17 @@ if not os.path.exists(output_dir):
 
 # C:\Users\Zeng\PycharmProjects\meraki_scrape_test/runway-de-waratte_ch_9    
 print(output_dir)
-# shutil.make_archive("C:\Users\Zeng\PycharmProjects\meraki_scrape_test/runway-de-waratte_ch_9", 'zip', "C:\Users\Zeng\PycharmProjects\meraki_scrape_test\", 'runway-de-waratte_ch_9')
-def zipdir(path, ziph):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file))
-            
-zipf = zipfile.ZipFile('test.zip', 'w', zipfile.ZIP_DEFLATED)
-zipdir('runway-de-waratte_ch_9', zipf)
-zipf.close()
+
+## method 1##
+shutil.make_archive("C:/Users/Zeng/PycharmProjects/meraki_scrape_test/runway-de-waratte_ch_9", 'zip', "C:/Users/Zeng/PycharmProjects/meraki_scrape_test/", 'runway-de-waratte_ch_9')
+
+# ## method 2##
+# def zipdir(path, ziph):
+#     # ziph is zipfile handle
+#     for root, dirs, files in os.walk(path):
+#         for file in files:
+#             ziph.write(os.path.join(root, file))
+#            
+# zipf = zipfile.ZipFile('test.zip', 'w', zipfile.ZIP_DEFLATED)
+# zipdir('runway-de-waratte_ch_9', zipf)
+# zipf.close()
