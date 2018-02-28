@@ -3,12 +3,10 @@ import requests
 import sys
 import os.path
 import shutil
-import zipfile
 
-# change this
-# url = 'http://merakiscans.com/runway-de-waratte/9/'
-# url = 'http://merakiscans.com/mogusa-san/13/'
-url = 'http://merakiscans.com/dokgo2/17/'
+# change this url
+url = 'http://merakiscans.com/runway-de-waratte/9/'
+
 
 def scrape_html_for_data(url):
     html_response = requests.get(url).content
@@ -55,15 +53,12 @@ def create_zip_depth_one(output_dir, current_dir, folder_name):
     print("Zip file created: "+folder_name[:-1]+".zip.")
 
 if __name__ == "__main__":
-    try:
+    if len(sys.argv) > 1:
         url = sys.argv[1]
-    except IndexError:
-        sys.exit("Please use a valid Meraki chapter url as an arg.")
-        
     try:
         main_imgs, series_title, chapter_name, chapter_number, folder_name = scrape_html_for_data(url)
     except:
-        sys.exit("HTML was invalid. Contact asdfblarg with details.")
+        sys.exit("HTML was invalid. Please use a valid Meraki chapter url. \nOtherwise Contact asdfblarg with details.")
         
     output_dir, current_dir = create_directory(folder_name)
     download_images(main_imgs, series_title, chapter_name)
