@@ -4,7 +4,7 @@ import sys
 import os.path
 import shutil
 
-# change this url
+# change this default url
 url = 'http://merakiscans.com/runway-de-waratte/9/'
 
 def scrape_html_for_data(url):
@@ -12,7 +12,8 @@ def scrape_html_for_data(url):
     html_response = requests.get(url).content
     soup = BeautifulSoup(html_response, "html.parser")
     img_tags = soup.find_all('img')
-    # grab relevant metadata
+    
+    # parse for relevant metadata
     meta_info = img_tags[2]['alt'][:-4].split(' - ', 1)
     series_title, chapter_name = meta_info[0], meta_info[1]
     chapter_number = url.split('/')[-2]
@@ -34,11 +35,13 @@ def create_directory(folder_name):
     
 def download_images(img_tags, series_title, chapter_name):    
     for img_tag in img_tags[3:-2]:
+        # request image
         img_url = img_tag['src']
         response = requests.get(img_url)
         page_num = img_tag['src'].split('/')[-1]
         filename = chapter_name + '_'+ page_num 
         
+        # write image data to file
         if response.status_code == 200:
             with open(output_dir+'/'+filename, 'wb') as f:
                 f.write(response.content)
@@ -48,13 +51,15 @@ def download_images(img_tags, series_title, chapter_name):
         print("Download complete.", end="\r")
 
         
-def create_zip_depth_one(output_dir, current_dir, folder_name):
+def create_zip(output_dir, current_dir, folder_name):
     shutil.make_archive(output_dir, 'zip', current_dir, folder_name)
     print("Zip file created: "+folder_name[:-1]+".zip.")
 
 if __name__ == "__main__":
+    # 1st arg or default
     if len(sys.argv) > 1:
         url = sys.argv[1]
+        
     try:
         img_tags, series_title, chapter_name, chapter_number, folder_name = scrape_html_for_data(url)
     except:
@@ -62,5 +67,5 @@ if __name__ == "__main__":
         
     output_dir, current_dir = create_directory(folder_name)
     download_images(img_tags, series_title, chapter_name)
-    create_zip_depth_one(output_dir, current_dir, folder_name)
+    create_zip(output_dir, current_dir, folder_name)
     print(Done)
