@@ -48,7 +48,7 @@ def download_images(img_tags, series_title, chapter_name):
         
         #print progress after img write
         print("Downloading page: " + page_num + " out of " + img_tags[-3]['src'].split('/')[-1], end="\r")
-        print("Download complete.", end="\r")
+    print("Download complete.", end="\r")
 
         
 def create_zip(output_dir, current_dir, folder_name):
@@ -68,4 +68,4 @@ if __name__ == "__main__":
     output_dir, current_dir = create_directory(folder_name)
     download_images(img_tags, series_title, chapter_name)
     create_zip(output_dir, current_dir, folder_name)
-    print(Done)
+    print("Done")
